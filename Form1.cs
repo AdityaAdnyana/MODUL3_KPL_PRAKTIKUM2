@@ -1,3 +1,6 @@
+using System;
+using System.Windows.Forms;
+
 namespace Kalkulator
 {
     public partial class Form1 : Form
@@ -5,164 +8,151 @@ namespace Kalkulator
         double hasil;
         int operationCounter = 0;
         double[] angka = new double[100];
-
-        string operasi;
+        string operasi = "";
+        
+        string inputSementara = ""; 
 
         public Form1()
         {
             InitializeComponent();
         }
 
-        private void textBox1_TextChanged(object sender, EventArgs e)
+        private void tambahAngka(string nilai)
         {
-
+            inputSementara += nilai; 
+            textBox1.Text += nilai;  
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            textBox1.Text += "1";
-        }
+            tambahAngka("1");
+        } 
         private void button2_Click(object sender, EventArgs e)
         {
-            textBox1.Text += "2";
+            tambahAngka("2");
         }
-
-        private void button0_Click(object sender, EventArgs e)
-        {
-            textBox1.Text += "0";
-        }
-
         private void button3_Click(object sender, EventArgs e)
         {
-            textBox1.Text += "3";
+            tambahAngka("3");
         }
-
         private void button4_Click(object sender, EventArgs e)
         {
-            textBox1.Text += "4";
+            tambahAngka("4");
         }
-
         private void button5_Click(object sender, EventArgs e)
         {
-            textBox1.Text += "5";
+            tambahAngka("5");
         }
-
         private void button6_Click(object sender, EventArgs e)
         {
-            textBox1.Text += "6";
+            tambahAngka("6");
         }
-
         private void button7_Click(object sender, EventArgs e)
         {
-            textBox1.Text += "7";
+            tambahAngka("7");
         }
-
         private void button8_Click(object sender, EventArgs e)
         {
-            textBox1.Text += "8";
+            tambahAngka("8");
         }
-
         private void button9_Click(object sender, EventArgs e)
         {
-            textBox1.Text += "9";
+            tambahAngka("9");
         }
-
+        private void button0_Click(object sender, EventArgs e)
+        {
+            tambahAngka("0");
+        }
         private void button00_Click(object sender, EventArgs e)
         {
-            textBox1.Text += "00";
+            tambahAngka("00");
+        }
+        private void prosesOperator(string simbol)
+        {
+            if (inputSementara != "")
+            { 
+                angka[operationCounter] = double.Parse(inputSementara);
+                operationCounter++;
+                
+                operasi += simbol;
+                textBox1.Text += simbol; 
+                
+                inputSementara = ""; 
+            }
+        }
+
+        private void buttonPlus_Click(object sender, EventArgs e)
+        {
+            prosesOperator("+");
+        } 
+        private void buttonMin_Click(object sender, EventArgs e)
+        {
+            prosesOperator("-");
+        }
+        private void buttonTimes_Click(object sender, EventArgs e){
+            prosesOperator("*");
+        }        private void buttonDivide_Click(object sender, EventArgs e)
+        {
+            prosesOperator("÷");
+        }
+        private void buttonMod_Click(object sender, EventArgs e)
+        {
+            prosesOperator("%");
         }
 
         private void buttonAutoClear_Click(object sender, EventArgs e)
         {
             textBox1.Clear();
-        }
-
-        private void buttonPlus_Click(object sender, EventArgs e)
-        {
-            angka[operationCounter] = double.Parse(textBox1.Text);
-
-            operationCounter++;
-
-            operasi += "+";
-            textBox1.Text += "+";
-        }
-
-        private void buttonMin_Click(object sender, EventArgs e)
-        {
-            angka[operationCounter] = double.Parse(textBox1.Text);
-
-            operationCounter ++;
-
-            operasi += "-";
-            textBox1.Text += "-";
-        }
-
-        private void buttonTimes_Click(object sender, EventArgs e)
-        {
-            angka[operationCounter] = double.Parse(textBox1.Text);
-
-            operationCounter++;
-
-            operasi += "*";
-            textBox1.Text += "*";
-        }
-
-        private void buttonDivide_Click(object sender, EventArgs e)
-        {
-            angka[operationCounter] = double.Parse(textBox1.Text);
-
-            operationCounter++;
-
-            operasi += "÷";
-            textBox1.Text += "÷";
-        }
-
-        private void buttonMod_Click(object sender, EventArgs e)
-        {
-            angka[operationCounter] = double.Parse(textBox1.Text);
-
-            operationCounter++;
-
-            operasi += "%";
-            textBox1.Text += "%";
-            
+            inputSementara = "";
+            operasi = "";
+            operationCounter = 0;
+            hasil = 0;
+            Array.Clear(angka, 0, angka.Length); 
         }
 
         private void buttonEquals_Click(object sender, EventArgs e)
         {
-            for (int currentOperationIndex = 0; currentOperationIndex <= operationCounter; 
-                currentOperationIndex += 1)
+            if (inputSementara != "")
             {
-            for (int i = 0; i < operasi.Length; i++)
-              {
-               
-
-                    if (operasi[i] == '+')
-                    {
-                        hasil += angka[i];
-                    }
-                    else if (operasi[i] == '-')
-                    {
-                        hasil -= angka[i];
-                    }
-                    else if (operasi[i] == '*')
-                    {
-                        hasil *= angka[i];
-                    }
-                    else if (operasi[i] == '÷')
-                    {
-                        hasil /= angka[i];
-                    }
-                    else if (operasi[i] == '%')
-                    {
-                        hasil %= angka[i];
-                    }
-                }
-                textBox1.Text = hasil.ToString();
+                angka[operationCounter] = double.Parse(inputSementara);
             }
-            hasil = 0;
+
+            hasil = angka[0];
+
+            for (int i = 0; i < operasi.Length; i++)
+            {
+                char operatorSekarang = operasi[i];
+                double angkaBerikutnya = angka[i + 1];
+
+                if (operatorSekarang == '+')
+                {
+                    hasil = hasil + angkaBerikutnya;
+                }
+                else if (operatorSekarang == '-')
+                {
+                    hasil = hasil - angkaBerikutnya;
+                }
+                else if (operatorSekarang == '*')
+                {
+                    hasil = hasil * angkaBerikutnya;
+                }
+                else if (operatorSekarang == '÷' || operatorSekarang == '/')
+                {
+                    hasil = hasil / angkaBerikutnya;
+                }
+                else if (operatorSekarang == '%')
+                {
+                    hasil = hasil % angkaBerikutnya;
+                }
+            }
+
+            textBox1.Text = hasil.ToString();
+            
+          
             operasi = "";
-            operationCounter = 0;
+            inputSementara = hasil.ToString(); 
+            angka[0] = hasil; 
+            operationCounter = 1; 
         }
     }
 }
